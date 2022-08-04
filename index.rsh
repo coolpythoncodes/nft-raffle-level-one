@@ -52,7 +52,6 @@ export const main = Reach.App(() => {
   A.interact.displayHashValue(commitAlice);
   commit();
   A.pay([[amt, nftId]])
-  transfer([[amt, nftId]]).to(A);
   commit()
 
   unknowable(B, A(_winnigNumber, _saltAlice));
@@ -72,12 +71,16 @@ export const main = Reach.App(() => {
 
   A.publish(saltAlice, winnigNumber);
   checkCommitment(commitAlice, saltAlice, winnigNumber);
-  commit()
+
+  const outcome = computeOutcome(winnigNumber, bobRaffleNumber)
+  transfer(amt, nftId).to(outcome === 0 ? B : A);
 
   each([A,B], () => {
-    const outcome = computeOutcome(winnigNumber, bobRaffleNumber)
     interact.seeOutcome(outcome);
   });
+
+  commit()
+
   // write your program here
   exit();
 });
